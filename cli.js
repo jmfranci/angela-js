@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const npmRun = require('npm-run');
+const generate = require('./angela_modules/generate'); 
+const destroy = require('./angela_modules/destroy'); 
+const init = require('./angela_modules/init');
 
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
@@ -34,54 +37,11 @@ if (sizeOfArguments === 0){
 }
 
 if (args[argsExecuted] === 'init'){
-	if(hasNextArg()){
-		if(args[argsExecuted] === '--help'){
-			helpForInit();
-		}else{
-			// Create project with designated name
-			initAngelaProject(args[argsExecuted]);
-		}
-	}else{
-		console.log(`${missingArgumentsMessage} ${args[argsExecuted-1]}`);
-	}
+	init.handle(args[0]);
 }else if (args[argsExecuted] === 'generate' || args[0] === 'g'){
-	if(hasNextArg()){
-		if(args[argsExecuted] === '--help'){
-			helpForGenerate();
-		}else if (args[argsExecuted] === 'controller'){
-			//TODO - Add help for generate controller
-
-			if(hasNextArg()){
-				//TODO - Verify if current dir is a valid Angela.js project
-				generateController(args[argsExecuted]);
-			}
-		}else if (args[argsExecuted] === 'model'){
-			//TODO - Add help for generate model
-
-			if(hasNextArg()){
-				//TODO - Verify if current dir is a valid Angela.js project
-				generateModel(args[argsExecuted]);
-			}
-		}else if (args[argsExecuted] === 'route'){
-			//TODO - Add help for generate route
-
-			if(hasNextArg()){
-				//TODO - Verify if current dir is a valid Angela.js project
-				generateRoute(args[argsExecuted]);
-			}
-		}else if (args[argsExecuted] === 'middleware'){
-			//TODO - Add help for generate middleware
-
-			if(hasNextArg()){
-				//TODO - Verify if current dir is a valid Angela.js project
-				generateMiddleware(args[argsExecuted]);
-			}
-		}else {
-			console.log(`${signature} Unknown command`);
-		}
-	}else{
-		console.log(`${missingArgumentsMessage} ${args[argsExecuted-1]}`);
-	}
+	generate.handle(args[0]);
+}else if (args[argsExecuted] === 'destroy' || args[0] === 'g'){
+	destroy.handle(args[0]);
 }else if (args[argsExecuted] === 'serve' || args[0] === 's'){
 	runApplication();
 }else{
