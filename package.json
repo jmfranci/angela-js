@@ -1,0 +1,19 @@
+{
+  "name": "npm-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "angela": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jose Francisco",
+  "license": "ISC",
+  "dependencies": {
+    "npm-run": "^5.0.1"
+  },
+  "devDependencies": {},
+  "description": ""
+}
