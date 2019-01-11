@@ -37,7 +37,8 @@ if (sizeOfArguments === 0){
 }
 
 if (args[argsExecuted] === 'init'){
-	init.handle(args[0]);
+	args.shift();
+	init.handle(args);
 }else if (args[argsExecuted] === 'generate' || args[0] === 'g'){
 	generate.handle(args[0]);
 }else if (args[argsExecuted] === 'destroy' || args[0] === 'g'){
@@ -58,70 +59,7 @@ function hasNextArg(){
 
 
 // ****************** Functions for creation ***************************
-async function initAngelaProject(name){
-	console.log(`Initiating new Angela.js project named ${name}`);
 
-	fs.mkdir(name, function(){
-		npmRun.exec('npm init', {cwd: `./${name}`}, function (err, stdout, stderr) {
-			if (stderr){
-				console.log('An error occurred while initiating the project. Make sure you have Node Package Manager(NPM) installed');
-				console.log(stderr);
-			}
-			//console.log(stdout)
-		});
-
-		var stream = fs.createWriteStream(`./${name}/index.js`);
-			stream.once('open', function(fd) {
-		  	stream.write("My first row\n");
-		  	stream.write("My second row\n");
-		  	stream.end();
-		});
-
-		fs.mkdir(`./${name}/${CONTROLLERS}`, function(){
-
-		});
-
-		fs.mkdir(`./${name}/${MODELS}`, function(){
-
-		});
-
-		fs.mkdir(`./${name}/${ROUTES}`, function(){
-
-		});
-
-		fs.mkdir(`./${name}/${STARTUP}`, function(){
-
-		});
-
-		fs.mkdir(`./${name}/${CONFIG}`, function(){
-
-		});
-
-		fs.mkdir(`./${name}/${MIDDLEWARE}`, function(){
-
-		});
-
-
-		console.log(`Created project ${name}`);
-		process.exit(0);
-
-	});
-
-
-	// Create folder named 'name'
-
-	//Create new node.js project
-
-	/*Create the following folders:
-		* Routes
-		* Models
-		* Controllers
-		* Startup
-		* Middleware
-		* Config
-	*/
-
-}
 
 function generateController(name){
 	console.log(`Generating controller named ${name}`);
