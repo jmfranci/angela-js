@@ -11,8 +11,10 @@ const MIDDLEWARE = "middleware";
 const TESTS = "tests";
 // **** End Folders' names ******
 
-async function handle(args){
-	console.log(`Handled ${args}`);
+async function handle(callers, args){
+	console.log(`Handled ${args} and ${callers}`);
+
+	//TODO - Check if args' length is different than 0
 	initAngelaProject(args[0]);
 }
 
@@ -63,22 +65,9 @@ async function initAngelaProject(name){
 		console.log(`Created project ${name}`);
 		process.exit(0);
 
+		// Create .gitignore file
+
 	});
-
-
-	// Create folder named 'name'
-
-	//Create new node.js project
-
-	/*Create the following folders:
-		* Routes
-		* Models
-		* Controllers
-		* Startup
-		* Middleware
-		* Config
-	*/
-
 }
 
 module.exports.handle = handle;

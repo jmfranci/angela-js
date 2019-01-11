@@ -5,8 +5,17 @@ const templateHelpMessage = "This is the help for";
 //***** End of Pre-defined feedback messages *******
 
 function handle(callers, args){
-	console.log(`Handled ${args}`);
+	
 }
 
-module.exports.handle = handle;
+function generate(args){
+	console.log(`Generating controller named ${args[0]}`);
+}
 
+function destroy(args){
+
+}
+
+module.exports.generate = generate;
+module.exports.destroy = destroy;
+module.exports.handle = handle;
