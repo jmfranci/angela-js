@@ -7,7 +7,7 @@ const missingArgumentsMessage = "Add more arguments or add '--help' to learn mor
 const templateHelpMessage = "This is the help for";
 //***** End of Pre-defined feedback messages *******
 
-const CONTROLLERS = "controllers";
+const MIDDLEWARES = "middlewares";
 
 function handle(callers, args){
 	
@@ -15,7 +15,7 @@ function handle(callers, args){
 
 function generate(args){
 	console.log(`Generating controller named ${args[0]}`);
-	generateController(args[0]);
+	generateMiddleware(args[0]);
 
 }
 
@@ -23,12 +23,16 @@ function destroy(args){
 
 }
 
-function generateController(name){
-	var stream = fs.createWriteStream(`./${CONTROLLERS}/${name}.js`);
+function generate(name){
+	var stream = fs.createWriteStream(`./${MIDDLEWARES}/${name}.js`);
 	stream.once('open', function(fd) {
-		stream.write("//Customize this controller\n\n");
+		stream.write("//Customize this middleware\n");
+	 	stream.write("module.exports = function (req, res, next) { \n");
+	 	stream.write("\tnext(ex);\n");
+		stream.write("}");
 		stream.end();
 	});
+	console.log(`Generating middleware named ${name}`);
 }
 
 module.exports.generate = generate;

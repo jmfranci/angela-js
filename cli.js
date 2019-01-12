@@ -19,128 +19,31 @@ const TESTS = "tests";
 // Arguments are stored in an array called args
 const[,, ...args] = process.argv;
 
-
 //***** Pre-defined feedback messages *******
 const signature = "Angela.js:";
 const missingArgumentsMessage = "Add more arguments or add '--help' to learn more about the usage of";
 const templateHelpMessage = "This is the help for";
 //***** End of Pre-defined feedback messages *******
 
+const callers = [];
 
-//Print hello world provided args.
-//console.log(`Hello World ${args}`);
-sizeOfArguments = args.length;
-argsExecuted = 0;
-
-if (sizeOfArguments === 0){
+if (args.length === 0){
 	console.log(`${signature} Insert one or more arguments `);
 }
 
-if (args[argsExecuted] === 'init'){
-	args.shift();
-	init.handle(args);
-}else if (args[argsExecuted] === 'generate' || args[0] === 'g'){
-	generate.handle(args[0]);
-}else if (args[argsExecuted] === 'destroy' || args[0] === 'g'){
-	destroy.handle(args[0]);
-}else if (args[argsExecuted] === 'serve' || args[0] === 's'){
+if (args[0] === 'init'){
+	callers.push(args.shift());
+	init.handle(callers, args);
+}else if (args[0] === 'generate' || args[0] === 'g'){
+	callers.push(args.shift());
+	generate.handle(callers, args);
+}else if (args[0] === 'destroy' || args[0] === 'g'){
+	destroy.handle(callers, args[0]);
+}else if (args[0] === 'serve' || args[0] === 's'){
 	runApplication();
 }else{
 	console.log(`${signature} Unknown command`);
 }
-
-function hasNextArg(){
-	argsExecuted++;
-	if (sizeOfArguments === argsExecuted){
-		return false;
-	}
-	return true;
-}
-
-
-// ****************** Functions for creation ***************************
-
-
-function generateController(name){
-	console.log(`Generating controller named ${name}`);
-}
-
-function generateModel(name){
-	var stream = fs.createWriteStream('./model/' + name + '.js');
-	stream.once('open', function(fd) {
-		stream.write("//Customize this model\n\n");
-	 	stream.write("const mongoose = require('mongoose');\n");
-	 	stream.write("const Joi = require('joi');\n\n");
-	 	stream.write(`const ${name}Schema = new mongoose.Schema({\n`);
-	 	stream.write("\n");
-	 	stream.write("});\n\n");
-	 	stream.write(`const ${name} = mongoose.model(\'${name}\', genreSchema);\n\n`);
-	 	stream.write(`function validate${name}(${name}) {\n`);
-	 	stream.write("\tconst schema = {\n\n");
-	 	stream.write("\t};\n");
-	 	stream.write(`\treturn Joi.validate(${name}, schema);\n`);
-	 	stream.write("}\n\n");
-
-
-	 	stream.write(`module.exports.validate${name} = validate${name};\n`);
-	 	stream.write(`module.exports.${name} = ${name};\n`);
-	 	stream.write(`module.exports.${name}Schema = ${name}Schema;\n`);
-		stream.end();
-	});
-
-	console.log(`Generating model named ${name}`);
-}
-
-function generateRoute(name){
-	var stream = fs.createWriteStream(name + ".js");
-	stream.once('open', function(fd) {
-		stream.write("//Customize this route\n");
-	 	stream.write("const express = require(\'express\');\n");
-	 	stream.write("const router = express.Router();\n\n");
-		
-		//Template for get all request
-		stream.write("router.get('/', (req,res) => {\n");
-		stream.write(`\tres.status(200).send(\'Get ${name} \');\n`);
-		stream.write("});\n\n");
-
-		//Template for get one request
-		stream.write("router.get('/:id', (req,res) => {\n");
-		stream.write(`\tres.status(200).send(\`Get record with id \$\{req.params.id\} from ${name} \`);\n`);
-		stream.write("});\n\n");
-
-		//Template for post request
-		stream.write("router.post('/', (req, res) => {\n");
-		stream.write(`\tres.status(200).send(\'Post ${name} \');\n`);
-		stream.write("});\n\n");
-
-		//Template for put request
-		stream.write("router.put('/:id', (req,res) => {\n");
-		stream.write(`\tres.status(200).send(\`Put/update record with id \$\{req.params.id\} from ${name} \`);\n`);
-		stream.write("});\n\n");
-
-		stream.write("router.delete('/:id', (req,res) => {\n");
-		stream.write(`\tres.status(200).send(\`Delete record with id \$\{req.params.id\} from ${name} \`);\n`);
-		stream.write("});\n\n");
-
-		stream.write("module.exports = router;");
-		stream.end();
-	});
-	console.log(`Generating route named ${name}`);
-}
-
-function generateMiddleware(name){
-	var stream = fs.createWriteStream(name + ".js");
-	stream.once('open', function(fd) {
-		stream.write("//Customize this middleware\n");
-	 	stream.write("module.exports = function (req, res, next) { \n");
-	 	stream.write("\tnext(ex);\n");
-		stream.write("}");
-		stream.end();
-	});
-	console.log(`Generating middleware named ${name}`);
-}
-
-//***************** Functions for helping the user *********************
 
 // Help for command (angela init --help)
 function helpForInit(){

@@ -26,6 +26,10 @@ async function initAngelaProject(name){
 			if (stderr){
 				console.log('An error occurred while initiating the project. Make sure you have Node Package Manager(NPM) installed');
 				console.log(stderr);
+			}else{
+				installPackage('express');
+				installPackage('joi');
+				installPackage('mongoose');
 			}
 			//console.log(stdout)
 		});
@@ -67,6 +71,17 @@ async function initAngelaProject(name){
 
 		// Create .gitignore file
 
+	});
+}
+
+async function installPackage(name){
+	npmRun.exec(`npm i ${name}`, {cwd: `./${name}`}, function (err, stdout, stderr) {
+		if (stderr){
+			console.log(`An error occurred while installing ${name} package`);
+			console.log(stderr);
+		}else{
+			console.log(`${name} successfully installed`);
+		}
 	});
 }
 
