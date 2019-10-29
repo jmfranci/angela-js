@@ -1,3 +1,6 @@
+const fs = require('fs');
+const npmRun = require('npm-run');
+
 //***** Pre-defined feedback messages *******
 const signature = "Angela.js:";
 const missingArgumentsMessage = "Add more arguments or add '--help' to learn more about the usage of";
@@ -54,6 +57,8 @@ function generate(name){
 	});
 	console.log(`Generated route named ${name}`);
 }
+
+//TODO - Generate async routes
 
 module.exports.generate = generate;
 module.exports.destroy = destroy;
