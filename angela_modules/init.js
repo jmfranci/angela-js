@@ -16,6 +16,9 @@ let PROJECT_NAME = "";
 // **** End Folders' names ******
 const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
 
+//Functions from Angela Properties Modules
+const { ivap, initProjectProps } = require("../config/angelaProperties");
+
 async function handle(callers, args) {
   console.log(`Handled ${args} and ${callers}`);
 
@@ -69,7 +72,9 @@ async function initAngelaProject(name) {
       installDependencies(STD_DEPENDENCIES);
     });
 
-    // Create .gitignore file
+    // TODO - Create .gitignore file
+
+    // TODO - Create ReadMe file
   });
 }
 
@@ -81,10 +86,12 @@ async function installDependencies(arr) {
   });
   execInMainDir(`npm i ${listOfDependencies}`, err => {
     if (!err) {
+      pjsonPath = process.cwd() + "/" + PROJECT_NAME + "/package.json";
       console.log("Standard dependencies installed successfully");
       console.log(`Created project ${PROJECT_NAME}`);
-      var pjson = require(process.cwd() + "/" + PROJECT_NAME + "/package.json");
-      console.log(pjson.version);
+      if (!ivap) initAngelaProject(PROJECT_NAME);
+
+      // TODO - Run git init
       process.exit(0);
     }
   });

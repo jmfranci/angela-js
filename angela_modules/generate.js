@@ -16,6 +16,9 @@ const prompts = require("../helpers/prompts");
 
 async function handle(callers, args) {
   if (args.length === 0) {
+    const { ivap } = require("../config/angelaProperties");
+
+    console.log(ivap());
     const generable = await prompts.pickOne(
       "What do you want to generate",
       generables
