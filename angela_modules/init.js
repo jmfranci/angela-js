@@ -4,6 +4,8 @@ const npmRun = require("npm-run");
 const npm = require("npm");
 var exec = require("child_process").exec;
 const prompts = require("../helpers/prompts");
+const {log} = require("../helpers/core");
+
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
 const MODELS = "models";
@@ -20,7 +22,7 @@ const STD_DEPENDENCIES = [];
 const { ivap, initProjectProps } = require("../config/angelaProperties");
 
 async function handle(callers, args) {
-  console.log(`Handled ${args} and ${callers}`);
+  log(`Handled ${args} and ${callers}`);
 
   //TODO - Check if args' length is different than 0
   if (args.length === 0)
@@ -47,31 +49,22 @@ execInMainDir = (command, callback) => {
 async function initAngelaProject(name) {
   //PROJECT_NAME = name;
 
-  console.log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
-
-    generateFolderStructure(() => {
-      installDependencies();
-      //generateGitIgnore();
-    });
-    // TODO - Create .gitignore file
-    generateGitIgnore();
-
-    // TODO - Create ReadMe file
+  log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
+  generateFolderStructure(() => installDependencies());
+  //initGitRepo();
+  generateGitIgnore();
+  generateReadMe();
+  // TODO - Create ReadMe file
 }
 
 generateFolderStructure = (onFinish) => {
   fs.mkdir(PROJECT_NAME, function() {
     execInMainDir("npm init --yes", (err, stdout, stderr) => {
       fs.mkdir(`./${PROJECT_NAME}/${CONTROLLERS}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${MODELS}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${ROUTES}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${CONFIG}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${MIDDLEWARE}`, function() {});
 
       var stream = fs.createWriteStream(`./${PROJECT_NAME}/index.js`);
@@ -97,12 +90,20 @@ async function installDependencies() {
   execInMainDir(`npm i ${listOfDependencies}`, err => {
     if (!err) {
       pjsonPath = process.cwd() + "/" + PROJECT_NAME + "/package.json";
-      console.log("Standard dependencies installed successfully");
-      console.log(`Created project ${PROJECT_NAME}`);
+      log("Standard dependencies installed successfully");
+      log(`Created project ${PROJECT_NAME}`);
       if (!ivap) initAngelaProject(PROJECT_NAME);
       // TODO - Run git init
+
       process.exit(0);
     }
+  });
+}
+
+initGitRepo = () => {
+  log(`Initiating Git repo`);
+  execInMainDir(`git init`, err => {
+
   });
 }
 
@@ -112,9 +113,33 @@ generateGitIgnore = () => {
 		stream.write("node_modules/");
 		stream.end();
 	});
-	console.log(`Generated .gitignore file`);
+	log(`Generated .gitignore file`);
 }
 
+generateReadMe = () => {
+  var stream = fs.createWriteStream(process.cwd() + "/" + PROJECT_NAME + "/.README.md");
+	stream.once('open', function(fd) {
+    stream.write(`# ${PROJECT_NAME}
+      This project was entirely developed using the framework Angela.js. 
+      For running this project you'll only need Node/npm installed
+      However, for your convinience, it is advised that you install Angela.js at ....................
+
+    ## Installation Steps
+
+    ## Running the app
+
+    ## Running tests
+
+    # REST API
+      The REST API to the ${PROJECT_NAME} app is described below
+
+    ## Request 
+
+    `);
+		stream.end();
+	});
+	log(`Generated .gitignore file`);
+}
 
 module.exports.handle = handle;
 // if(hasNextArg()){
