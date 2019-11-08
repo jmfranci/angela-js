@@ -48,6 +48,17 @@ async function initAngelaProject(name) {
   //PROJECT_NAME = name;
 
   console.log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
+
+    generateFolderStructure(() => {
+      installDependencies();
+    });
+    // TODO - Create .gitignore file
+    generateGitIgnore();
+    
+    // TODO - Create ReadMe file
+}
+
+generateFolderStructure = (onFinish) => {
   fs.mkdir(PROJECT_NAME, function() {
     execInMainDir("npm init --yes", (err, stdout, stderr) => {
       fs.mkdir(`./${PROJECT_NAME}/${CONTROLLERS}`, function() {});
@@ -69,16 +80,13 @@ async function initAngelaProject(name) {
         stream.end();
       });
 
-      installDependencies(STD_DEPENDENCIES);
+      onFinish();
     });
+})
+};
 
-    // TODO - Create .gitignore file
-
-    // TODO - Create ReadMe file
-  });
-}
-
-async function installDependencies(arr) {
+async function installDependencies() {
+  const arr = STD_DEPENDENCIES;
   if (arr.length == 0) return;
   listOfDependencies = "";
   arr.map(dep => {
@@ -96,6 +104,16 @@ async function installDependencies(arr) {
     }
   });
 }
+
+generateGitIgnore = () => {
+	var stream = fs.createWriteStream(`./.gitignore`);
+	stream.once('open', function(fd) {
+		stream.write("./node_modules");
+		stream.end();
+	});
+	console.log(`Generated .gitignore file`);
+}
+
 
 module.exports.handle = handle;
 // if(hasNextArg()){

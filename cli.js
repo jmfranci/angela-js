@@ -4,6 +4,7 @@ const npmRun = require('npm-run');
 const generate = require('./angela_modules/generate'); 
 const destroy = require('./angela_modules/destroy'); 
 const init = require('./angela_modules/init');
+const chalk = require('chalk');
 
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
@@ -20,11 +21,13 @@ const TESTS = "tests";
 const[,, ...args] = process.argv;
 
 //***** Pre-defined feedback messages *******
-const signature = "Angela.js:";
-const missingArgumentsMessage = "Add more arguments or add '--help' to learn more about the usage of";
-const templateHelpMessage = "This is the help for";
+const signature = chalk.magenta("Angela.js:");
+const missingArgumentsMsg = "Add more arguments or add '--help' to learn more about the usage of";
+const templateHelpMsg = "This is the help for";
 //***** End of Pre-defined feedback messages *******
-
+const generateVariations = ['generate','g','create'];
+const destroyVariations = ['destroy', 'd', 'delete'];
+const runVariations = ['serve', 's', 'run'];
 const callers = [];
 
 if (args.length === 0){
@@ -34,12 +37,12 @@ if (args.length === 0){
 if (args[0] === 'init'){
 	callers.push(args.shift());
 	init.handle(callers, args);
-}else if (args[0] === 'generate' || args[0] === 'g'){
+}else if (generateVariations.includes(args[0])){
 	callers.push(args.shift());
 	generate.handle(callers, args);
-}else if (args[0] === 'destroy' || args[0] === 'g'){
+}else if (destroyVariations.includes(args[0])){
 	destroy.handle(callers, args[0]);
-}else if (args[0] === 'serve' || args[0] === 's'){
+}else if (runVariations.includes(args[0])){
 	runApplication();
 }else{
 	console.log(`${signature} Unknown command`);
@@ -47,11 +50,11 @@ if (args[0] === 'init'){
 
 // Help for command (angela init --help)
 function helpForInit(){
-	console.log(`${templateHelpMessage} ${args[argsExecuted-1]}`);
+	console.log(`${templateHelpMsg} ${args[argsExecuted-1]}`);
 }
 
 function helpForGenerate(){
-	console.log(`${templateHelpMessage} ${args[argsExecuted-1]}`);
+	console.log(`${templateHelpMsg} ${args[argsExecuted-1]}`);
 }
 
 // ***************** Functions for validation *********************
