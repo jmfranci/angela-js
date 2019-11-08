@@ -14,8 +14,8 @@ const MIDDLEWARE = "middleware";
 const TESTS = "tests";
 let PROJECT_NAME = "";
 // **** End Folders' names ******
-const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
-
+//const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
+const STD_DEPENDENCIES = [];
 //Functions from Angela Properties Modules
 const { ivap, initProjectProps } = require("../config/angelaProperties");
 
@@ -51,10 +51,11 @@ async function initAngelaProject(name) {
 
     generateFolderStructure(() => {
       installDependencies();
+      //generateGitIgnore();
     });
     // TODO - Create .gitignore file
     generateGitIgnore();
-    
+
     // TODO - Create ReadMe file
 }
 
@@ -87,6 +88,7 @@ generateFolderStructure = (onFinish) => {
 
 async function installDependencies() {
   const arr = STD_DEPENDENCIES;
+  
   if (arr.length == 0) return;
   listOfDependencies = "";
   arr.map(dep => {
@@ -98,7 +100,6 @@ async function installDependencies() {
       console.log("Standard dependencies installed successfully");
       console.log(`Created project ${PROJECT_NAME}`);
       if (!ivap) initAngelaProject(PROJECT_NAME);
-
       // TODO - Run git init
       process.exit(0);
     }
@@ -106,9 +107,9 @@ async function installDependencies() {
 }
 
 generateGitIgnore = () => {
-	var stream = fs.createWriteStream(`./.gitignore`);
+	var stream = fs.createWriteStream(process.cwd() + "/" + PROJECT_NAME + "/.gitignore");
 	stream.once('open', function(fd) {
-		stream.write("./node_modules");
+		stream.write("node_modules/");
 		stream.end();
 	});
 	console.log(`Generated .gitignore file`);
