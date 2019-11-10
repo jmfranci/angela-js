@@ -44,8 +44,10 @@ execInMainDir = (command, callback) => {
   });
 };
 
-async function initAngelaProject(name) {
-  //PROJECT_NAME = name;
+async function initAngelaProject() {
+  // Create folder structure
+  // Install std dependencies
+  // Write default files (index.js, db.js, startup.js)
 
   console.log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
   fs.mkdir(PROJECT_NAME, function() {
@@ -84,6 +86,8 @@ async function installDependencies(arr) {
   arr.map(dep => {
     listOfDependencies = listOfDependencies + dep + " ";
   });
+
+  // TODO - Add progress bar
   execInMainDir(`npm i ${listOfDependencies}`, err => {
     if (!err) {
       pjsonPath = process.cwd() + "/" + PROJECT_NAME + "/package.json";

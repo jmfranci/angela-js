@@ -18,7 +18,7 @@ async function handle(callers, args) {
   if (args.length === 0) {
     const { ivap } = require("../config/angelaProperties");
 
-    console.log(ivap());
+    //console.log(ivap());
     const generable = await prompts.pickOne(
       "What do you want to generate",
       generables
@@ -40,7 +40,7 @@ async function handle(callers, args) {
     //TODO - Add help for generate model
     //TODO - Verify if current dir is a valid Angela.js project
     callers.push(args.shift());
-    console.log(args);
+
     model.generate(args);
   } else if (args[0] === "route") {
     //TODO - Add help for generate route

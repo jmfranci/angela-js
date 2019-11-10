@@ -13,19 +13,20 @@ const MODELS = "models";
 function handle(callers, args) {}
 
 async function generate(args) {
-  console.log(args[0]);
+  const modelName = args[0];
+  console.log(args);
   if (args.length === 0) {
     const modelName = await prompts.input("Enter name of the model");
-    args.push(modelName);
+    //    args.push(modelName);
   }
-
-  console.log(args.length);
-  generateModel(args[0], args);
+  args.shift();
+  generateModel(modelName, args);
 }
 
 function destroy(args) {}
 
 function generate(name, args) {
+  console.log(args);
   //console.log(args.length);
   var stream = fs.createWriteStream(`./${MODELS}/${name}.js`);
   stream.once("open", function(fd) {

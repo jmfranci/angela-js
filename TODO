@@ -1,0 +1,9 @@
+1 - Add option to select what standard libraries one wants
+    a. This is going to change the files template
+    b. Express is going to be default
+2 - Look for the best software design solution to build the file templates
+3 - How can I write to file anywhere
+    a) How do I know that which one was the last "require" statement?
+4 - Destroy
+    a) How to delete files - This should be easy
+    b) How to remove all the references to that file - Challenging
