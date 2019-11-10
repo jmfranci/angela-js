@@ -4,6 +4,8 @@ const npmRun = require('npm-run');
 const generate = require('./angela_modules/generate'); 
 const destroy = require('./angela_modules/destroy'); 
 const init = require('./angela_modules/init');
+const chalk = require('chalk');
+const {log} = require('./helpers/core');
 
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
@@ -20,42 +22,44 @@ const TESTS = "tests";
 const[,, ...args] = process.argv;
 
 //***** Pre-defined feedback messages *******
-const signature = "Angela.js:";
-const missingArgumentsMessage = "Add more arguments or add '--help' to learn more about the usage of";
-const templateHelpMessage = "This is the help for";
-//***** End of Pre-defined feedback messages *******
+const signature = chalk.magenta("Angela.js:");
+const missingArgumentsMsg = "Add more arguments or add '--help' to learn more about the usage of";
+const templateHelpMsg = "This is the help for";
 
+//***** End of Pre-defined feedback messages *******
+const generateVariations = ['generate','g','create'];
+const destroyVariations = ['destroy', 'd', 'delete'];
+const runVariations = ['serve', 's', 'run'];
 const callers = [];
 
 if (args.length === 0){
-	console.log(`${signature} Insert one or more arguments `);
+	log(`Insert one or more arguments `);
 }
 
 if (args[0] === 'init'){
 	callers.push(args.shift());
 	init.handle(callers, args);
-}else if (args[0] === 'generate' || args[0] === 'g'){
+}else if (generateVariations.includes(args[0])){
 	callers.push(args.shift());
 	generate.handle(callers, args);
-}else if (args[0] === 'destroy' || args[0] === 'g'){
+}else if (destroyVariations.includes(args[0])){
 	destroy.handle(callers, args[0]);
-}else if (args[0] === 'serve' || args[0] === 's'){
+}else if (runVariations.includes(args[0])){
 	runApplication();
 }else{
-	console.log(`${signature} Unknown command`);
+	log(`Unknown command`);
 }
 
 // Help for command (angela init --help)
 function helpForInit(){
-	console.log(`${templateHelpMessage} ${args[argsExecuted-1]}`);
+	log(`${templateHelpMsg} ${args[argsExecuted-1]}`);
 }
 
 function helpForGenerate(){
-	console.log(`${templateHelpMessage} ${args[argsExecuted-1]}`);
+	log(`${templateHelpMsg} ${args[argsExecuted-1]}`);
 }
 
 // ***************** Functions for validation *********************
-
 function isWordReserved(word){
 	const dataTypes = ['string','int','undefined'];
 	const moduleNames = ['module', 'controller','model','view','route','config'];
@@ -63,6 +67,6 @@ function isWordReserved(word){
 
 // ***************** Functions for Executing the App *********************
 function runApplication(){
-	console.log("Running Application");
+	log("Running Application");
 }
 

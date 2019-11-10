@@ -4,6 +4,8 @@ const npmRun = require("npm-run");
 const npm = require("npm");
 var exec = require("child_process").exec;
 const prompts = require("../helpers/prompts");
+const {log} = require("../helpers/core");
+
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
 const MODELS = "models";
@@ -13,21 +15,32 @@ const CONFIG = "config";
 const MIDDLEWARE = "middleware";
 const TESTS = "tests";
 let PROJECT_NAME = "";
-// **** End Folders' names ******
-const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
 
+// **** Templates ******
+const {tReadMe} = require("./templates/readme");
+const {tIndex} = require("./templates/index");
+
+//const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
+const STD_DEPENDENCIES = ["express"];
 //Functions from Angela Properties Modules
 const { ivap, initProjectProps } = require("../config/angelaProperties");
 
 async function handle(callers, args) {
-  console.log(`Handled ${args} and ${callers}`);
+  log(`Handled ${args} and ${callers}`);
 
-  //TODO - Check if args' length is different than 0
   if (args.length === 0)
     PROJECT_NAME = await prompts.input("Enter project name");
   else PROJECT_NAME = args[0];
 
-  initAngelaProject(PROJECT_NAME);
+  initAngelaProject();
+}
+
+async function initAngelaProject() {
+  log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
+  generateFolderStructure(() => installDependencies());
+  //initGitRepo();
+  generateGitIgnore();
+  generateReadMe();
 }
 
 execInMainDir = (command, callback) => {
@@ -44,46 +57,40 @@ execInMainDir = (command, callback) => {
   });
 };
 
+<<<<<<< HEAD
 async function initAngelaProject() {
   // Create folder structure
   // Install std dependencies
   // Write default files (index.js, db.js, startup.js)
+=======
+>>>>>>> c59221e7e40d272c0c1b5bd9d310f54e0a2ddbe1
 
-  console.log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
+generateFolderStructure = (onFinish) => {
   fs.mkdir(PROJECT_NAME, function() {
     execInMainDir("npm init --yes", (err, stdout, stderr) => {
       fs.mkdir(`./${PROJECT_NAME}/${CONTROLLERS}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${MODELS}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${ROUTES}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${CONFIG}`, function() {});
-
       fs.mkdir(`./${PROJECT_NAME}/${MIDDLEWARE}`, function() {});
 
       var stream = fs.createWriteStream(`./${PROJECT_NAME}/index.js`);
       stream.once("open", function(fd) {
-        stream.write("My first row\n");
-        stream.write("My second row\n");
+        stream.write(tIndex);
         stream.end();
       });
 
-      installDependencies(STD_DEPENDENCIES);
+      onFinish();
     });
+  })
+};
 
-    // TODO - Create .gitignore file
+async function installDependencies() {
 
-    // TODO - Create ReadMe file
-  });
-}
-
-async function installDependencies(arr) {
-  if (arr.length == 0) return;
+  if (STD_DEPENDENCIES.length == 0) return;
   listOfDependencies = "";
-  arr.map(dep => {
+  STD_DEPENDENCIES.map(dep => {
     listOfDependencies = listOfDependencies + dep + " ";
   });
 
@@ -91,24 +98,37 @@ async function installDependencies(arr) {
   execInMainDir(`npm i ${listOfDependencies}`, err => {
     if (!err) {
       pjsonPath = process.cwd() + "/" + PROJECT_NAME + "/package.json";
-      console.log("Standard dependencies installed successfully");
-      console.log(`Created project ${PROJECT_NAME}`);
+      log("Standard dependencies installed successfully");
+      log(`Created project ${PROJECT_NAME}`);
       if (!ivap) initAngelaProject(PROJECT_NAME);
-
-      // TODO - Run git init
       process.exit(0);
     }
   });
 }
 
+initGitRepo = () => {
+  log(`Initiating Git repo`);
+  execInMainDir(`git init`, err => {
+
+  });
+}
+
+generateGitIgnore = () => {
+	var stream = fs.createWriteStream(process.cwd() + "/" + PROJECT_NAME + "/.gitignore");
+	stream.once('open', function(fd) {
+		stream.write("node_modules/");
+		stream.end();
+	});
+	log(`Generated .gitignore file`);
+}
+
+generateReadMe = () => {
+  var stream = fs.createWriteStream(process.cwd() + "/" + PROJECT_NAME + "/README.md");
+	stream.once('open', function(fd) {
+    stream.write(tReadMe);
+		stream.end();
+	});
+	log(`Generated README file`);
+}
+
 module.exports.handle = handle;
-// if(hasNextArg()){
-// 	if(args[argsExecuted] === '--help'){
-// 		helpForInit();
-// 	}else{
-// 		// Create project with designated name
-// 		initAngelaProject(args[argsExecuted]);
-// 	}
-// }else{
-// 	console.log(`${missingArgumentsMessage} ${args[argsExecuted-1]}`);
-// }
