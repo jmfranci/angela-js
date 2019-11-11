@@ -4,7 +4,7 @@ const npmRun = require("npm-run");
 const npm = require("npm");
 var exec = require("child_process").exec;
 const prompts = require("../helpers/prompts");
-const {log} = require("../helpers/core");
+const { log, generateFile } = require("../helpers/core");
 
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
@@ -17,13 +17,18 @@ const TESTS = "tests";
 let PROJECT_NAME = "";
 
 // **** Templates ******
-const {tReadMe} = require("./templates/readme");
-const {tIndex} = require("./templates/index");
-
+const { tReadMe } = require("./templates/readme");
+const { tIndex } = require("./templates/index");
+const { tGitIgnore } = require("./templates/gitignore");
+const { tHomeRoute } = require("./templates/homeRoute");
 //const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
-const STD_DEPENDENCIES = ["express"];
+const STD_DEPENDENCIES = [];
 //Functions from Angela Properties Modules
-const { ivap, initProjectProps } = require("../config/angelaProperties");
+const {
+  ivap,
+  initProjectProps,
+  setProjectName
+} = require("../config/angelaProperties");
 
 async function handle(callers, args) {
   log(`Handled ${args} and ${callers}`);
@@ -37,10 +42,11 @@ async function handle(callers, args) {
 
 async function initAngelaProject() {
   log(`Initiating new Angela.js project named ${PROJECT_NAME}`);
+  setProjectName(PROJECT_NAME);
   generateFolderStructure(() => installDependencies());
   //initGitRepo();
-  generateGitIgnore();
-  generateReadMe();
+  generateFile(".gitignore", tGitIgnore);
+  generateFile("README.md", tReadMe, true);
 }
 
 execInMainDir = (command, callback) => {
@@ -57,15 +63,7 @@ execInMainDir = (command, callback) => {
   });
 };
 
-<<<<<<< HEAD
-async function initAngelaProject() {
-  // Create folder structure
-  // Install std dependencies
-  // Write default files (index.js, db.js, startup.js)
-=======
->>>>>>> c59221e7e40d272c0c1b5bd9d310f54e0a2ddbe1
-
-generateFolderStructure = (onFinish) => {
+generateFolderStructure = onFinish => {
   fs.mkdir(PROJECT_NAME, function() {
     execInMainDir("npm init --yes", (err, stdout, stderr) => {
       fs.mkdir(`./${PROJECT_NAME}/${CONTROLLERS}`, function() {});
@@ -74,20 +72,15 @@ generateFolderStructure = (onFinish) => {
       fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${CONFIG}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${MIDDLEWARE}`, function() {});
-
-      var stream = fs.createWriteStream(`./${PROJECT_NAME}/index.js`);
-      stream.once("open", function(fd) {
-        stream.write(tIndex);
-        stream.end();
-      });
-
+      initProjectProps(PROJECT_NAME);
+      generateFile("index.js", tIndex);
+      generateFile(`${ROUTES}/home.js`, tHomeRoute);
       onFinish();
     });
-  })
+  });
 };
 
 async function installDependencies() {
-
   if (STD_DEPENDENCIES.length == 0) return;
   listOfDependencies = "";
   STD_DEPENDENCIES.map(dep => {
@@ -108,27 +101,7 @@ async function installDependencies() {
 
 initGitRepo = () => {
   log(`Initiating Git repo`);
-  execInMainDir(`git init`, err => {
-
-  });
-}
-
-generateGitIgnore = () => {
-	var stream = fs.createWriteStream(process.cwd() + "/" + PROJECT_NAME + "/.gitignore");
-	stream.once('open', function(fd) {
-		stream.write("node_modules/");
-		stream.end();
-	});
-	log(`Generated .gitignore file`);
-}
-
-generateReadMe = () => {
-  var stream = fs.createWriteStream(process.cwd() + "/" + PROJECT_NAME + "/README.md");
-	stream.once('open', function(fd) {
-    stream.write(tReadMe);
-		stream.end();
-	});
-	log(`Generated README file`);
-}
+  execInMainDir(`git init`, err => {});
+};
 
 module.exports.handle = handle;

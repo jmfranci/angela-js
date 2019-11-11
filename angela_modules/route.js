@@ -1,8 +1,8 @@
 const fs = require("fs");
 const npmRun = require("npm-run");
-
+const { log, generateFile } = require("../helpers/core");
+const { getRouteTemplate } = require("./templates/route");
 //***** Pre-defined feedback messages *******
-const signature = "Angela.js:";
 const missingArgumentsMessage =
   "Add more arguments or add '--help' to learn more about the usage of";
 const templateHelpMessage = "This is the help for";
@@ -21,46 +21,8 @@ function destroy(args) {
 }
 
 function generate(name) {
-  var stream = fs.createWriteStream(`./${ROUTES}/${name}.js`);
-  stream.once("open", function(fd) {
-    stream.write("//Customize this route\n");
-    stream.write("const express = require('express');\n");
-    stream.write("const router = express.Router();\n\n");
-
-    //Template for get all request
-    stream.write("router.get('/', (req,res) => {\n");
-    stream.write(`\tres.status(200).send(\'Get ${name} \');\n`);
-    stream.write("});\n\n");
-
-    //Template for get one request
-    stream.write("router.get('/:id', (req,res) => {\n");
-    stream.write(
-      `\tres.status(200).send(\`Get record with id \$\{req.params.id\} from ${name} \`);\n`
-    );
-    stream.write("});\n\n");
-
-    //Template for post request
-    stream.write("router.post('/', (req, res) => {\n");
-    stream.write(`\tres.status(200).send(\'Post ${name} \');\n`);
-    stream.write("});\n\n");
-
-    //Template for put request
-    stream.write("router.put('/:id', (req,res) => {\n");
-    stream.write(
-      `\tres.status(200).send(\`Put/update record with id \$\{req.params.id\} from ${name} \`);\n`
-    );
-    stream.write("});\n\n");
-
-    stream.write("router.delete('/:id', (req,res) => {\n");
-    stream.write(
-      `\tres.status(200).send(\`Delete record with id \$\{req.params.id\} from ${name} \`);\n`
-    );
-    stream.write("});\n\n");
-
-    stream.write("module.exports = router;");
-    stream.end();
-  });
-  console.log(`Generated route named ${name}`);
+  // TODO - Add route to Angela Properties
+  generateFile(`${ROUTES}/${name}.js`, getRouteTemplate(name), true);
 }
 
 //TODO - Generate async routes
