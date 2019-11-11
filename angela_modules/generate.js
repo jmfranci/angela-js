@@ -48,7 +48,7 @@ async function handle(callers, args) {
     if (args.length != 0) {
       //TODO - Verify if current dir is a valid Angela.js project
       callers.push(args.shift());
-      route.generate(args);
+      route.generate(args[0]);
     }
   } else if (args[0] === "middleware") {
     //TODO - Add help for generate middleware

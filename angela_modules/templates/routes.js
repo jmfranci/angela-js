@@ -3,7 +3,7 @@ const { getRoutes } = require("../../config/angelaProperties");
 const filepath = "startup/routes.js";
 const routesList = getRoutes();
 const routesPath = "../routes";
-const { log, generateFile } = require("../helpers/core");
+const { log, generateFile } = require("../../helpers/core");
 
 // String that stores the libraries to import
 const libs = `const express = require('express');`;
@@ -14,6 +14,8 @@ const routePrefix = "/api/v1";
 let routeUsage = "";
 const routeHomeUsage = `app.use('/', home);`;
 
+log(`This is the list ${routesList}`);
+
 getRouteImportStatement = route => {
   return `const ${route} = require('${routesPath}/${route}');\n`;
 };
@@ -22,19 +24,18 @@ getRouteUseStatement = route => {
   return `app.use('${routePrefix}/${route}', ${route});\n`;
 };
 
-routesList.map(route => (routeImport += getRouteImportStatement(route)));
-routesList.map(route => (routeUsage += `\t${getRouteUseStatement(route)}`));
+refreshRoutes = () => {
+  routesList.map(route => (routeImport += getRouteImportStatement(route)));
+  routesList.map(route => (routeUsage += `\t${getRouteUseStatement(route)}`));
 
-const finalContent = `
-${libs}
-${routeImport}
-${mainFunctionExport}{
-    ${expressJson}
-${routeUsage}
-    ${routeHomeUsage}
-}`;
-
-refreshRoutes => {
+  const finalContent = `
+  ${libs}
+  ${routeImport}
+  ${mainFunctionExport}{
+      ${expressJson}
+  ${routeUsage}
+      ${routeHomeUsage}
+  }`;
   generateFile(filepath, finalContent);
 };
 

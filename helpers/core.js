@@ -14,7 +14,7 @@ generateFile = (relativePath, content, wantLog, onFinish) => {
   stream.once("open", function(fd) {
     stream.write(content);
     stream.end();
-    if (wantLog) log(`Generated file ${relativePath}`);
+    if (wantLog) log(`Generated file ${chalk.cyan(relativePath)}`);
     if (onFinish) onFinish();
   });
 };

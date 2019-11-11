@@ -29,18 +29,27 @@ initProjectProps = PROJECT_NAME => {
   updateProps(true);
 };
 
-updateProps = isFirstUpdate => {
+updateProps = (isFirstUpdate, cb) => {
   let pjson;
   try {
     if (isFirstUpdate)
       pjsonPath = process.cwd() + "/" + projName + "/package.json";
     pjson = require(pjsonPath);
   } catch (ex) {
-    console.log(ex);
+    log(ex);
   }
 
   pjson.angela = angela;
-  fs.writeFileSync(pjsonPath, JSON.stringify(pjson, null, 2));
+  //fs.writeFileSync(pjsonPath, JSON.stringify(pjson, null, 2));
+
+  const stream = fs.createWriteStream(pjsonPath);
+  stream.once("open", function(fd) {
+    stream.write(JSON.stringify(pjson, null, 2));
+    stream.end();
+    cb();
+  });
+
+  log("Updated Angela Properties");
 };
 
 getTimeOfCreation = () => angela.date;
@@ -51,31 +60,31 @@ getModels = () => (angela.models ? angela.models : []);
 
 getProjectAbsolutePath = () => {
   if (isValidAngelaProject()) {
-    //console.log("IS A VALID PROJECT");
+    //log("IS A VALID PROJECT");
     return process.cwd();
   }
-  //console.log("IS NOT A VALID");
+  //log("IS NOT A VALID");
   return process.cwd() + "/" + projName;
 };
 
-pushRoute = name => pushItem("routes", name);
-pushController = name => pushItem("controllers", name);
-pushModel = name => pushItem("models", name);
+pushRoute = (name, cb) => pushItem("routes", name, cb);
+pushController = (name, cb) => pushItem("controllers", name, cb);
+pushModel = (name, cb) => pushItem("models", name, cb);
 
 removeModel = name => removeItem("models", name);
 removeController = name => removeItem("controllers", name);
 removeRoute = name => removeItem("routes", name);
 
 /* Operations with Arrays*/
-pushItem = (arrName, value) => {
+pushItem = (arrName, value, callback) => {
   arrName = arrName.toLowerCase();
   value = value.toLowerCase();
   if (angela[arrName])
     if (!angela[arrName].includes(value)) angela[arrName].push(value);
-    else console.log(`File in ${arrName} with name ${value} already exists`);
+    else log(`File in ${arrName} with name ${value} already exists`);
   else angela[arrName] = [value];
-
-  return true;
+  log(angela[arrName]);
+  updateProps(false, callback);
 };
 
 removeItem = (arrName, value) => {
@@ -85,7 +94,7 @@ removeItem = (arrName, value) => {
     if (angela[arrName].includes(value)) {
       angela[arrName] = angela[arrName].filter(e => e !== value);
       updateProps();
-    } else console.log(`File in ${arrName} with name ${value} does not exist`);
+    } else log(`File in ${arrName} with name ${value} does not exist`);
 };
 
 itemExists = (arrName, value) => {
