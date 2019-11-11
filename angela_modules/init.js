@@ -21,6 +21,7 @@ const { tReadMe } = require("./templates/readme");
 const { tIndex } = require("./templates/index");
 const { tGitIgnore } = require("./templates/gitignore");
 const { tHomeRoute } = require("./templates/homeRoute");
+
 //const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
 const STD_DEPENDENCIES = [];
 //Functions from Angela Properties Modules
@@ -72,9 +73,9 @@ generateFolderStructure = onFinish => {
       fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${CONFIG}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${MIDDLEWARE}`, function() {});
+      generateFile("index.js", tIndex, true);
+      generateFile(`${ROUTES}/home.js`, tHomeRoute, true);
       initProjectProps(PROJECT_NAME);
-      generateFile("index.js", tIndex);
-      generateFile(`${ROUTES}/home.js`, tHomeRoute);
       onFinish();
     });
   });
