@@ -55,7 +55,7 @@ generateFolderStructure = onFinish => {
       fs.mkdir(`./${PROJECT_NAME}/${ROUTES}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {
         generateFile(
-          `${PROJECT_NAME}/${STARTUP}/routes.js`,
+          `${STARTUP}/routes.js`,
           getStartupRoutesContent()
         );
       });

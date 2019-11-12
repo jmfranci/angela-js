@@ -1,4 +1,5 @@
 var pjsonPath = process.cwd() + "/package.json";
+const path = require('path');
 const notValid = "Not a valid Angela.js Project";
 const chalk = require("chalk");
 const fs = require("fs");
@@ -59,14 +60,22 @@ getControllers = () => (angela.controllers ? angela.controllers : []);
 getModels = () => (angela.models ? angela.models : []);
 
 getProjectAbsolutePath = () => {
+  //TODO - This needs urgent fixing
+  //It will be working with a workaround for now
+  let absolutePath = "";
   if (isValidAngelaProject()) {
     //log("IS A VALID PROJECT");
-    log("pap: " + process.cwd());
-    return process.cwd();
+    absolutePath = process.cwd();
+    if (path.basename(absolutePath) !== getProjectName()) absolutePath += `/${getProjectName()}`
+    log("papIn: " + absolutePath);
+    log("pnIn: " + getProjectName());
+    return absolutePath;
   }
+  absolutePath = process.cwd() + "/" + projName
   //log("IS NOT A VALID");
-  log("pap: " + process.cwd() + "/" + projName);
-  return process.cwd() + "/" + projName;
+  log("papOut: " + absolutePath);
+  log("pnOut: " + projName);
+  return absolutePath;
 };
 
 pushRoute = (name, cb) => pushItem("routes", name, cb);
