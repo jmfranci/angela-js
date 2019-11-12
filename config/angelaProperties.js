@@ -46,14 +46,14 @@ updateProps = (isFirstUpdate, cb) => {
   stream.once("open", function(fd) {
     stream.write(JSON.stringify(pjson, null, 2));
     stream.end();
-    cb();
+    if (cb) cb();
   });
 
   log("Updated Angela Properties");
 };
 
 getTimeOfCreation = () => angela.date;
-getProjectName = () => angela.projectName;
+getProjectName = () => (angela.projectName ? angela.projectName : projName);
 getRoutes = () => (angela.routes ? angela.routes : []);
 getControllers = () => (angela.controllers ? angela.controllers : []);
 getModels = () => (angela.models ? angela.models : []);
@@ -61,9 +61,11 @@ getModels = () => (angela.models ? angela.models : []);
 getProjectAbsolutePath = () => {
   if (isValidAngelaProject()) {
     //log("IS A VALID PROJECT");
+    log("pap: " + process.cwd());
     return process.cwd();
   }
   //log("IS NOT A VALID");
+  log("pap: " + process.cwd() + "/" + projName);
   return process.cwd() + "/" + projName;
 };
 
@@ -111,6 +113,7 @@ module.exports.ivap = isValidAngelaProject;
 module.exports.initProjectProps = initProjectProps;
 module.exports.getProjectAbsolutePath = getProjectAbsolutePath;
 module.exports.setProjectName = setProjectName;
+module.exports.getProjectName = getProjectName;
 module.exports.getRoutes = getRoutes;
 module.exports.pushRoute = pushRoute;
 module.exports.removeRoute = removeRoute;

@@ -14,8 +14,6 @@ const routePrefix = "/api/v1";
 let routeUsage = "";
 const routeHomeUsage = `app.use('/', home);`;
 
-log(`This is the list ${routesList}`);
-
 getRouteImportStatement = route => {
   return `const ${route} = require('${routesPath}/${route}');\n`;
 };
@@ -24,7 +22,8 @@ getRouteUseStatement = route => {
   return `app.use('${routePrefix}/${route}', ${route});\n`;
 };
 
-refreshRoutes = () => {
+function getContent() {
+  console.log(`Size of the list: ${routesList.length}`);
   routesList.map(route => (routeImport += getRouteImportStatement(route)));
   routesList.map(route => (routeUsage += `\t${getRouteUseStatement(route)}`));
 
@@ -36,7 +35,13 @@ refreshRoutes = () => {
   ${routeUsage}
       ${routeHomeUsage}
   }`;
-  generateFile(filepath, finalContent);
+
+  return finalContent;
+}
+//TODO - Solve problem of first pushed route not added to this file
+refreshRoutes = () => {
+  generateFile(filepath, getContent());
 };
 
 module.exports.refreshRoutes = refreshRoutes;
+module.exports.getStartupRoutesContent = getContent;

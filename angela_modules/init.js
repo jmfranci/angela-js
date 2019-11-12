@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 const fs = require("fs");
-const npmRun = require("npm-run");
-const npm = require("npm");
-var exec = require("child_process").exec;
 const prompts = require("../helpers/prompts");
-const { log, generateFile } = require("../helpers/core");
-
+const { log, generateFile, execInMainDir } = require("../helpers/core");
+const { getStartupRoutesContent } = require("./templates/routes");
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
 const MODELS = "models";
@@ -22,8 +19,8 @@ const { tIndex } = require("./templates/index");
 const { tGitIgnore } = require("./templates/gitignore");
 const { tHomeRoute } = require("./templates/homeRoute");
 
-//const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
-const STD_DEPENDENCIES = [];
+const STD_DEPENDENCIES = ["express", "joi", "mongoose"];
+//const STD_DEPENDENCIES = [];
 //Functions from Angela Properties Modules
 const {
   ivap,
@@ -50,32 +47,24 @@ async function initAngelaProject() {
   generateFile("README.md", tReadMe, true);
 }
 
-execInMainDir = (command, callback) => {
-  const absoluteProjPath = process.cwd() + "/" + PROJECT_NAME;
-  const FULL_COMMAND = `(cd ${absoluteProjPath} && ${command})`;
-  //console.log(`Executed command: ${FULL_COMMAND}`);
-  child = exec(FULL_COMMAND, function(error, stdout, stderr) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(stdout);
-    }
-    callback(error, stdout, stderr);
-  });
-};
-
 generateFolderStructure = onFinish => {
   fs.mkdir(PROJECT_NAME, function() {
     execInMainDir("npm init --yes", (err, stdout, stderr) => {
       fs.mkdir(`./${PROJECT_NAME}/${CONTROLLERS}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${MODELS}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${ROUTES}`, function() {});
-      fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {});
+      fs.mkdir(`./${PROJECT_NAME}/${STARTUP}`, function() {
+        generateFile(
+          `${PROJECT_NAME}/${STARTUP}/routes.js`,
+          getStartupRoutesContent()
+        );
+      });
       fs.mkdir(`./${PROJECT_NAME}/${CONFIG}`, function() {});
       fs.mkdir(`./${PROJECT_NAME}/${MIDDLEWARE}`, function() {});
       generateFile("index.js", tIndex, true);
       generateFile(`${ROUTES}/home.js`, tHomeRoute, true);
       initProjectProps(PROJECT_NAME);
+
       onFinish();
     });
   });

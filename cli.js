@@ -5,7 +5,7 @@ const generate = require("./angela_modules/generate");
 const destroy = require("./angela_modules/destroy");
 const init = require("./angela_modules/init");
 const chalk = require("chalk");
-const { log } = require("./helpers/core");
+const { log, execInMainDir } = require("./helpers/core");
 
 // **** Folders' names ******
 const CONTROLLERS = "controllers";
@@ -75,5 +75,6 @@ function isWordReserved(word) {
 
 // ***************** Functions for Executing the App *********************
 function runApplication() {
-  log("Running Application");
+  //TODO - Change this command to a script that has to be added in the package.json file
+  execInMainDir("node index.js");
 }
