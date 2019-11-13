@@ -83,7 +83,7 @@ async function installDependencies() {
       pjsonPath = process.cwd() + "/" + PROJECT_NAME + "/package.json";
       log("Standard dependencies installed successfully");
       log(`Created project ${PROJECT_NAME}`);
-      if (!ivap) initAngelaProject(PROJECT_NAME);
+      //if (!ivap) initAngelaProject(PROJECT_NAME);
       process.exit(0);
     }
   });

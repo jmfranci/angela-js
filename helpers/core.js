@@ -28,7 +28,7 @@ execInMainDir = (command, callback) => {
   //const absoluteProjPath = process.cwd() + "/" + getProjectName();
   absoluteProjPath = getProjectAbsolutePath();
   const FULL_COMMAND = `(cd ${absoluteProjPath} && ${command})`;
-  //console.log(`Executed command: ${FULL_COMMAND}`);
+  console.log(`Executed command: ${FULL_COMMAND}`);
   child = exec(FULL_COMMAND, function(error, stdout, stderr) {
     if (error) {
       log(error);

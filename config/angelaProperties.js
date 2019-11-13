@@ -25,7 +25,10 @@ initProjectProps = PROJECT_NAME => {
   angela = {
     projectName: PROJECT_NAME,
     date: new Date(),
-    active: true
+    active: true,
+    routes: [],
+    controllers: [],
+    models: []
   };
   updateProps(true);
 };
@@ -36,6 +39,7 @@ updateProps = (isFirstUpdate, cb) => {
     if (isFirstUpdate)
       pjsonPath = process.cwd() + "/" + projName + "/package.json";
     pjson = require(pjsonPath);
+    console.log(pjson.angela);
   } catch (ex) {
     log(ex);
   }
