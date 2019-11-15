@@ -10,7 +10,7 @@ const exportStatements = `
 getMongooseSchema = (modelName, properties) => {
     return `
     const ${name}Schema = new mongoose.Schema({
-        ${/* Loop through the properties and plan accordingly */}
+        
     });
     
     const ${name} = mongoose.model(\'${name}\', genreSchema);
@@ -21,7 +21,6 @@ getValidateFunction = (modelName, properties) => {
     return `
     function validate${modelName.toUpperCase()}(${modelName}) {
         const schema = {
-            ${/* Loop through the properties and plan accordingly */}
             ${getMongooseProperties(properties)}
         };
     `;
