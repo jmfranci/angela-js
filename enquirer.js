@@ -23,6 +23,8 @@ const prompt = new MultiSelect({
     { name: "yellow", value: "#ffff00" }
   ]
 });
+//THe choices property determines the choices that are going to appear in the prompt
+
 //This runs the enquirer
 prompt
   .run()
