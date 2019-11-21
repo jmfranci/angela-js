@@ -23,7 +23,7 @@ const prompt = new MultiSelect({
     { name: "yellow", value: "#ffff00" }
   ]
 });
-
+//This runs the enquirer
 prompt
   .run()
   .then(answer => console.log("Answer:", answer))
